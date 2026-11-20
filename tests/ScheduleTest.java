@@ -1,0 +1,2 @@
+import com.nicole.stillin.Schedule;
+public class ScheduleTest {static void check(long a,long b){if(a!=b)throw new AssertionError(a+" != "+b);}public static void main(String[] args){long m=60000L,due=8*60*m;check(Schedule.next(0,due),due-30*m);check(Schedule.next(due-30*m,due),due);check(Schedule.next(due-1,due),due);check(Schedule.next(due,due),due+15*m);check(Schedule.next(due+16*m,due),due+30*m);check(Schedule.next(due+120*m,due),due+135*m);System.out.println("Alarm deadline tests passed");}}

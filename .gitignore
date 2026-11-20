@@ -1,0 +1,6 @@
+.build/
+*.keystore
+*.p12
+*.jks
+*.idsig
+node_modules/

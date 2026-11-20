@@ -1,0 +1,8 @@
+const {test}=require('node:test');const a=require('node:assert/strict');const M=require('../dist/model.js');
+test('tampon deadline never exceeds eight hours',()=>{const s=M.blank();a.throws(()=>M.add(s,'tampon',9));const x=M.add(s,'tampon',8);a.equal(x.due-x.start,8*3600000)});
+test('supports backup pads but prevents two internal products',()=>{const s=M.blank();M.add(s,'tampon',4);M.add(s,'pad',4);a.throws(()=>M.add(s,'cup',8));a.throws(()=>M.add(s,'pad',4));a.equal(s.active.length,2)});
+test('removal retains unknown saturation as null instead of dry',()=>{const s=M.blank(),x=M.add(s,'pad',4);M.finish(s,x.id,{soak:null,ml:null});a.equal(s.active.length,0);a.equal(s.history[0].soak,null)});
+test('empty and reinsert retains volume and starts a new independent deadline',()=>{const s=M.blank(),start=Date.now()-3600000,x=M.add(s,'cup',8,start);M.finish(s,x.id,{ml:18.5,reinserted:true},true);a.equal(s.history[0].ml,18.5);a.equal(s.active.length,1);a.notEqual(s.active[0].id,x.id);a.equal(s.active[0].due-s.active[0].start,8*3600000)});
+test('overdue timer increases without resetting the original deadline',()=>{const x={start:0,due:1000};a.equal(M.timer(x,500).overdue,false);a.equal(M.timer(x,1000).overdue,true);a.equal(M.timer(x,2500).ms,1500);a.equal(x.due,1000)});
+test('removal cannot be duplicated and invalid volume is rejected',()=>{const s=M.blank(),x=M.add(s,'disc',8);a.throws(()=>M.finish(s,x.id,{ml:NaN}));a.equal(s.active.length,1);M.finish(s,x.id,{ml:0});a.equal(s.history[0].ml,0);a.throws(()=>M.finish(s,x.id))});
+test('local date keys use device calendar dates',()=>{a.equal(M.day(new Date(2026,10,20,23,59)), '2026-11-20')});
