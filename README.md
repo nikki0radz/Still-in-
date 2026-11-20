@@ -1,32 +1,33 @@
-# Still In?
+# Still In? · Drip edition
 
-What's in. When it's out. A simple, offline period tracker for Android, with a browser preview.
+A simple, private Android period tracker. Red Velvet styling, Nicole's supplied Drip artwork, wear-time timelines, quick reports, and a continuous calendar story.
 
-## First draft · 0.2
+## Version 0.3
 
-Black and blood-red dark theme across the interface, calendar, product illustrations, app icon, and Android system bars. Signed with the original key for an in-place update.
+- Black / oxblood interface with serif headings and a delicate gothic arch.
+- Original supplied Drip sheets displayed through individually clipped SVG viewports. Image pixels are preserved; no substitute or regenerated drawings.
+- Start time on the left, removal/change deadline on the right, and a fill meter marking the current position. Overdue time stays tied to the original deadline.
+- Drip relaxes during the first hour, then switches hourly to the corresponding product-filling scenes. Tampons and pads have six scenes; cups and discs have twelve. Scenes represent **elapsed wear time**, never measured fullness or inferred blood loss.
+- Product-specific confirmation artwork after inserting, changing or reinserting.
+- New timer defaults: tampon 6 hours, cup/disc 12 hours, pad/liner 4 hours, period pants 8 hours. Adjustable in settings; follow the actual brand's shorter instructions and change earlier when needed. Tampon reminders cannot exceed 8 hours.
+- Existing active deadlines and explicit reminder preferences survive updates. Fresh replacements use the current default; empty/reinsert retains that session's chosen interval.
+- Quick timestamped reports: cramps (six severity levels), leaks, waking dry, blood on bedding, bleeding starting, heavy bleeding, no blood right now, and notes.
+- Reporting no blood records that moment; it does not clear other reports, photos, or an entire day's history.
+- Calendar switches between Month and Timeline. Timeline connects dates and chronological reports / insertions / removals, with product-wear bars across a 24-hour axis. Overnight use is split across local days. Empty dates are explicitly unlogged, never assumed clear.
+- Current flow updates get timestamped for today; past-day flow entries remain date-only summaries. No invented timestamps for older day notes.
+- Saturation, optional cup/disc ml, leakage and private photos remain available on removal. The receipts include reports too.
 
-- Illustrated product picker: tampon, cup, disc, pad, liner, and period pants.
-- An internal product plus external backup can run together. Prevents logging two internal products simultaneously.
-- Timestamp-based countdowns, overdue time, 30-minute warnings, due alarms, and repeated 15-minute overdue reminders.
-- Tampon timers capped at eight hours. Cup/disc defaults eight hours; selectable reminders up to twelve hours require following the brand's instructions. Reminder times are not guarantees of safe wear.
-- Removal records with optional saturation, collected ml, leakage, and private photos.
-- One-tap empty/reinsert or fresh product replacement.
-- Calendar with explicit no-bleeding/spotting/light/medium/heavy entries and notes. Unlogged days remain unlogged; no predictions.
-- “Nothing tonight” with optional cheeky banter.
-- Private JSON export including photos. No account, analytics, AI usage, or server-held health records.
+## Install and privacy
 
-## Android
+Install `dist/still-in-0.3.apk` over a previous Still In installation. It uses the same package ID and signing key, preserving app data. Enable notifications and precise alarms in Settings → Phone reminders, then try the 10-second test on the actual phone before relying on delivery.
 
-Install `dist/still-in-0.2.apk`. Open Settings → Phone reminders, allow notifications and precise alarms, and use the 10-second reminder test before relying on it. Device-specific sound, Do Not Disturb, battery restrictions, force stop, and power-off behavior require testing on the actual phone. On Android 14+, ongoing notifications can be swiped away while unlocked; dismissing the notification does not cancel the scheduled alarm.
+The APK bundles the UI and artwork and works offline, with no Internet or shared-storage permission. Log state is private SharedPreferences, photos are private WebView IndexedDB, and temporary built-in camera captures use private cache. No login, analytics, AI calls, or server-held health records. Android backups are disabled. Photos reach shared storage only through a user-requested JSON export. Clearing app data or uninstalling removes logs and photos. Browser-preview and Android records are separate.
 
-The APK bundles the UI and works offline. The app requests no Internet or shared-storage permission. Log state is stored in private SharedPreferences; photos are held in private WebView IndexedDB. The built-in camera captures to private cache, strips metadata by decoding/recompressing, passes the resized image to the form, and deletes its temporary file. Photos reach shared storage only via an explicit export. Backups are disabled. Uninstalling or clearing app data removes logs and photos. Browser preview data is separate from Android app data.
+Ongoing notifications show a countdown/overdue chronometer, with a separate 30-minute warning, due alarm and repeated 15-minute overdue reminders. Android 14+ can allow swiping away the ongoing notification while unlocked; that does not cancel the scheduled alarm. Actual sound, lock-screen delivery, Do Not Disturb, battery restrictions, force-stop and power-off behavior need device testing.
 
-The signing key is intentionally excluded from this public repository. Its private backup is saved as `still-in-signing-backup.zip` in Nicole's files. Always reuse that key for APK updates; changing keys would require uninstalling and losing private app data.
+## Build
 
-### Build
-
-Requires JDK, Eclipse ECJ, Android SDK platform 35 and build tools (aapt2, d8, zipalign, apksigner). The script accepts `STILL_ANDROID_SDK` with `android-35/android.jar`, `android-15/` build tools and `ecj.jar`; optionally set `STILL_ANDROID_BUILD`.
+Requires JDK, ECJ and SDK platform 35 / Android build tools. Set `STILL_ANDROID_SDK` to a directory containing `android-35/android.jar`, `android-15/` build tools and `ecj.jar`. `STILL_ANDROID_BUILD` is optional.
 
 ```sh
 STILL_KEYSTORE=/private/path/still-in-signing.p12 \
@@ -34,23 +35,22 @@ STILL_STORE_PASSWORD="$(cat /private/path/password.txt)" \
 ./scripts/build-android.sh
 ```
 
-Alias: `still-in`. Never commit the keystore or password.
+The signing key is excluded from this public repo. Nicole's private backup is `still-in-signing-backup.zip`. Reuse that key (alias `still-in`) for every update; never commit it or its password.
 
-### Checks
+## Checks
 
 ```sh
 node --test tests/model.test.cjs
 node --check dist/app.js
+node --check dist/drip-art.js
 ```
 
-Compile and run `tests/ScheduleTest.java` with `android/src/com/nicole/stillin/Schedule.java` to verify alarm timing on a JVM.
+The model suite covers migration, original deadlines, reports, validation, Drip stages, chronological reinsertion and cross-midnight wear. Compile `tests/ScheduleTest.java` with `android/src/com/nicole/stillin/Schedule.java` to verify alarm timing on a JVM. The APK compiles and verifies v2/v3 signatures. Browser interaction checks cover artwork, reporting, product confirmations and calendar views. No Android emulator or physical phone is available in this workspace; device alarm delivery, camera orientation and reboot restoration remain acceptance checks.
 
 ## Browser preview
 
-Serve `dist/` as static files. No installation or build required. Browser mode supports logs, calendar, in-app camera capture, and export, but does not schedule closed-app phone alarms. The APK download is linked from the preview. Sites deployment configuration is in `.openai/hosting.json`.
+Serve `dist/` as static files, no dependencies or build step. The preview supports local records, photos and export, but not closed-browser phone alarms. Sites deployment identity is preserved in `.openai/hosting.json`.
 
-## Verification limits
+The original supplied artwork is in `dist/art/`; sprite metadata is in `dist/drip-art.js`. The API contains no user records or test fixtures. Test activity in a developer preview is browser-local and is never shipped in the APK.
 
-JavaScript model tests and JVM scheduling tests pass; the APK compiles and its v2/v3 signatures verify. Browser flows were tested interactively. No Android emulator or physical device is available in this workspace, so actual delivery with screen locked, Samsung power management, camera orientation, reboot restoration, and notification sounds remain device acceptance checks.
-
-Guidance: [FDA tampon safety](https://www.fda.gov/consumers/consumer-updates/facts-tampons-and-tampon-safety), [Android exact alarms](https://developer.android.com/develop/background-work/services/alarms), [Android ongoing notification behavior](https://developer.android.com/about/versions/14/behavior-changes-all#non-dismissable-notifications).
+Guidance: [FDA tampon safety](https://www.fda.gov/consumers/consumer-updates/facts-tampons-and-tampon-safety), [CDC menstrual hygiene](https://www.cdc.gov/hygiene/about/menstrual-hygiene.html), [Pixie Cup instructions](https://itspixie.com/pages/faqs), [Android alarms](https://developer.android.com/develop/background-work/services/alarms).

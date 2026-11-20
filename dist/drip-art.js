@@ -1,0 +1,10 @@
+/* Original supplied artwork, displayed through SVG viewports. Source pixels are untouched. */
+(function(root){
+let clipId=0;
+const sheets={everyday:{file:'drip-everyday.png',w:1312,h:1199,cols:4,rows:4},tampon:{file:'drip-tampon-cramps.png',w:2172,h:724,cols:6,rows:2},cup:{file:'drip-cup.png',w:1448,h:1086,cols:4,rows:3},cupExtra:{file:'drip-cup-extra.png',w:1217,h:1293,cols:4,rows:4},disc:{file:'drip-disc.png',w:1448,h:1086,cols:4,rows:3},pad:{file:'drip-pad.png',w:1536,h:1024,cols:3,rows:2}};
+function viewport(file,w,h,x,y,cw,ch,css,label){const clip='drip-clip-'+(++clipId);return `<svg class="${css}" viewBox="${x} ${y} ${cw} ${ch}" ${label?`role="img" aria-label="${label}"`:'aria-hidden="true"'} preserveAspectRatio="xMidYMid meet"><defs><clipPath id="${clip}"><rect x="${x}" y="${y}" width="${cw}" height="${ch}"/></clipPath></defs><g clip-path="url(#${clip})"><image href="art/${file}" width="${w}" height="${h}"/></g></svg>`}
+function scene(sheet,index,css='drip-art',label='Drip'){const s=sheets[sheet]||sheets.everyday,n=Math.max(0,Math.min(s.cols*s.rows-1,index)),cw=s.w/s.cols,ch=s.h/s.rows;return viewport(s.file,s.w,s.h,(n%s.cols)*cw,Math.floor(n/s.cols)*ch,cw,ch,css,label)}
+function product(type,level=0){const rows={tampon:0,cup:1,pad:2,liner:2,disc:3},row=rows[type]??0,col=Math.min(5,Math.max(0,Math.round(level))),ys=[0,285,530,800],hs=[280,240,270,220];return viewport('products.png',1536,1024,20+250*col,ys[row],260,hs[row],'product-art','')}
+function report(type,severity=1,css='report-art'){if(type==='cramps')return scene('tampon',Math.max(0,Math.min(5,severity-1)),css,'Drip with cramps');if(type==='wake_dry')return scene('cupExtra',2,css,'Drip waking up to clean sheets');if(type==='wake_blood')return scene('cupExtra',3,css,'Drip finding blood on the sheets');if(type==='leak')return scene('everyday',11,css,'Drip reporting a leak');if(type==='clear')return scene('everyday',0,css,'Drip having a calm moment');return scene('everyday',8,css,'Drip reporting')}
+root.DripArt={scene,product,report};
+})(window);
