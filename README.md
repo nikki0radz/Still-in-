@@ -2,7 +2,9 @@
 
 What's in. When it's out. A simple, offline period tracker for Android, with a browser preview.
 
-## First draft · 0.1
+## First draft · 0.2
+
+Black and blood-red dark theme across the interface, calendar, product illustrations, app icon, and Android system bars. Signed with the original key for an in-place update.
 
 - Illustrated product picker: tampon, cup, disc, pad, liner, and period pants.
 - An internal product plus external backup can run together. Prevents logging two internal products simultaneously.
@@ -16,7 +18,7 @@ What's in. When it's out. A simple, offline period tracker for Android, with a b
 
 ## Android
 
-Install `dist/still-in-0.1.apk`. Open Settings → Phone reminders, allow notifications and precise alarms, and use the 10-second reminder test before relying on it. Device-specific sound, Do Not Disturb, battery restrictions, force stop, and power-off behavior require testing on the actual phone. On Android 14+, ongoing notifications can be swiped away while unlocked; dismissing the notification does not cancel the scheduled alarm.
+Install `dist/still-in-0.2.apk`. Open Settings → Phone reminders, allow notifications and precise alarms, and use the 10-second reminder test before relying on it. Device-specific sound, Do Not Disturb, battery restrictions, force stop, and power-off behavior require testing on the actual phone. On Android 14+, ongoing notifications can be swiped away while unlocked; dismissing the notification does not cancel the scheduled alarm.
 
 The APK bundles the UI and works offline. The app requests no Internet or shared-storage permission. Log state is stored in private SharedPreferences; photos are held in private WebView IndexedDB. The built-in camera captures to private cache, strips metadata by decoding/recompressing, passes the resized image to the form, and deletes its temporary file. Photos reach shared storage only via an explicit export. Backups are disabled. Uninstalling or clearing app data removes logs and photos. Browser preview data is separate from Android app data.
 

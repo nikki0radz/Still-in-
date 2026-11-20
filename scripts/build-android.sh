@@ -17,5 +17,5 @@ java -cp "$STILL_SDK/ecj.jar" org.eclipse.jdt.internal.compiler.batch.Main -8 -n
 cp "$STILL_BUILD/base.apk" "$STILL_BUILD/unsigned.apk"
 (cd "$STILL_BUILD/dex" && zip -q "$STILL_BUILD/unsigned.apk" classes.dex)
 "$STILL_SDK/android-15/zipalign" -f 4 "$STILL_BUILD/unsigned.apk" "$STILL_BUILD/aligned.apk"
-"$STILL_SDK/android-15/apksigner" sign --ks "$STILL_KEYSTORE" --ks-pass env:STILL_STORE_PASSWORD --key-pass env:STILL_STORE_PASSWORD --ks-key-alias still-in --out "$STILL_ROOT/dist/still-in-0.1.apk" "$STILL_BUILD/aligned.apk"
-"$STILL_SDK/android-15/apksigner" verify --verbose "$STILL_ROOT/dist/still-in-0.1.apk"
+"$STILL_SDK/android-15/apksigner" sign --ks "$STILL_KEYSTORE" --ks-pass env:STILL_STORE_PASSWORD --key-pass env:STILL_STORE_PASSWORD --ks-key-alias still-in --out "$STILL_ROOT/dist/still-in-0.2.apk" "$STILL_BUILD/aligned.apk"
+"$STILL_SDK/android-15/apksigner" verify --verbose "$STILL_ROOT/dist/still-in-0.2.apk"
